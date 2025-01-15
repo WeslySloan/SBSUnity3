@@ -1,0 +1,13 @@
+{
+    "name": "com.kdh.utility",
+    "version": "1.0.0",
+    "displayName": "My Common Code",
+    "description": "This is an example package",
+    "unity": "2022.3",
+    "dependencies": {
+        "com.unity.cinemachine": "2.10.2"
+    },
+    "author":{
+        "name":"KDH"
+    }
+}
