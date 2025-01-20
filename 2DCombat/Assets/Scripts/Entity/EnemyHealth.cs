@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour, Idamagable
@@ -8,6 +9,7 @@ public class EnemyHealth : MonoBehaviour, Idamagable
 
     [field: SerializeField] public int CurrentHealth { get; set; }
     [field:SerializeField] public int MaxHealth { get; set; } = 3;
+    public bool HasTakenDamgage { get; set ; } 
 
     private void Start()
     {
@@ -16,6 +18,7 @@ public class EnemyHealth : MonoBehaviour, Idamagable
 
     public void Damage(int amount)
     {
+        HasTakenDamgage = true;
         CurrentHealth -= amount;
 
         Die();
