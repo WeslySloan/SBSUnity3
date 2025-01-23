@@ -17,22 +17,36 @@ public class EnemyHealth : MonoBehaviour, Idamagable
     [SerializeField] private AudioClip damageClip;
     public string HurtClipName;
 
+    [SerializeField] private ParticleSystem _damageParticle;
+
     private void Start()
     {
         CurrentHealth = MaxHealth;
         _impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
-    public void Damage(int amount)
+    public void Damage(int amount, Vector2 attackDirection)
     {
         HasTakenDamgage = true;
         CurrentHealth -= amount;
         CameraShakeManager.Instance.CameraShakeFromProfile(_impulseSource, profile);
         // Sound
-
         PlayRandomSFX();
-       
+        // Effect
+        SpawnDamageParticle(attackDirection);
+
         Die();
+    }
+
+    private void SpawnDamageParticle(Vector2 attackDirection)
+    {
+        if (_damageParticle == null)
+        {
+            return;
+        }
+
+        Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, -attackDirection);
+        Instantiate(_damageParticle, transform.position, spawnRotation);
     }
 
     private void PlayRandomSFX()
