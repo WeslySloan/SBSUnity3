@@ -3,32 +3,25 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CinemachineImpulseSource))]
-public class EnemyHealth : MonoBehaviour, Idamagable
+public class EnemyHealth : BaseHealth
 {
-    // Ã¼·Â
-
-    [field: SerializeField] public int CurrentHealth { get; set; }
-    [field:SerializeField] public int MaxHealth { get; set; } = 3;
-    public bool HasTakenDamgage { get; set ; }
-
     private CinemachineImpulseSource _impulseSource;
     [SerializeField] private ScreenShakeSO profile;
 
-    [SerializeField] private AudioClip damageClip;
-    public string HurtClipName;
+    HPBar _hpBar;
 
-    [SerializeField] private ParticleSystem _damageParticle;
-
-    private void Start()
+    protected override void Start()
     {
-        CurrentHealth = MaxHealth;
+        base.Start();
         _impulseSource = GetComponent<CinemachineImpulseSource>();
+        _hpBar = GetComponentInChildren<HPBar>();
     }
 
-    public void Damage(int amount, Vector2 attackDirection)
+    public override void Damage(int amount, Vector2 attackDirection)
     {
         HasTakenDamgage = true;
         CurrentHealth -= amount;
+        _hpBar.UpdateHPBar(MaxHealth, CurrentHealth);
         CameraShakeManager.Instance.CameraShakeFromProfile(_impulseSource, profile);
         // Sound
         PlayRandomSFX();
@@ -36,31 +29,5 @@ public class EnemyHealth : MonoBehaviour, Idamagable
         SpawnDamageParticle(attackDirection);
 
         Die();
-    }
-
-    private void SpawnDamageParticle(Vector2 attackDirection)
-    {
-        if (_damageParticle == null)
-        {
-            return;
-        }
-
-        Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, -attackDirection);
-        Instantiate(_damageParticle, transform.position, spawnRotation);
-    }
-
-    private void PlayRandomSFX()
-    {
-        int randomIndex = UnityEngine.Random.Range(1, 5);
-        string clipName = HurtClipName + randomIndex;
-        SoundManager.Instance.PlaySFXFromString(clipName, 1f);
-    }
-
-    public void Die()
-    {
-        if(CurrentHealth <= 0)
-        {          
-            Destroy(gameObject);
-        }
     }
 }
