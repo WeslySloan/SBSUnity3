@@ -1,7 +1,29 @@
+using System;
 using UnityEngine;
 
 public class UIOptionView : MonoBehaviour
 {
+    public GameObject defaultObject;
+
+    private void Awake()
+    {
+        InputUser.Instance.MenuOpen += PauseOn;
+        InputUser.Instance.MenuClose += PauseOff;
+        SwitchOff();
+    }
+
+    private void PauseOn()
+    {
+        Time.timeScale = 0f;
+        SwitchTo(defaultObject);
+    }
+
+    private void PauseOff()
+    {
+        Time.timeScale = 1;
+        SwitchOff();
+    }
+
     public void SwitchTo(GameObject _menu)
     {
         SwitchOff();
