@@ -18,6 +18,7 @@ public class PlayerMeleeAttack : MonoBehaviour
     public bool ShouldBeDamage { get; set; }
     private List<Idamagable> idamagables = new List<Idamagable>();
 
+    public float AttackCD => attackCD;
 
     private void Start()
     {
