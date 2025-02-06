@@ -1,18 +1,75 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScriptNewBehaviourScript : MonoBehaviour
+public class Storage : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [Tooltip("swap 기능에 대한 토글")]
+    [SerializeField] bool staticStorage;
+
+    [SerializeField] protected List<UISlot> slots = new List<UISlot>();
+    [SerializeField] protected List<Item> items = new List<Item>();
+
+    UISlot swapUISlot;
+   
+    public virtual void Start()
     {
-        
+        SetSlot();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SetSlot()
     {
-        
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].UpdateUI(items[i]);
+            slots[i].SetupStorage(this);
+            slots[i].SetupMouseDrag(this);
+        }
     }
+
+    public void SwapItem(UISlot otherSlot)
+    {
+        if(swapUISlot == null)     // 최초 드래그
+        {
+            swapUISlot = otherSlot;
+        }
+        else if(swapUISlot == otherSlot)  // 드래그 자기 위치에 다시 놓을 때 (캔슬)
+        {
+            ClearSwap();
+        }
+        else // 실제 swap 로직
+        {
+            Storage storage1 = swapUISlot.GetStorage();
+            int index1 = GetItemIndex(swapUISlot);
+            Item item1 = GetItem(index1);
+
+            Storage storage2 = otherSlot.GetStorage();
+            int index2 = GetItemIndex(otherSlot);
+            Item item2 = GetItem(index2);
+
+            if(!storage1.staticStorage)
+            {
+                storage1.SetItemSlot(index1, item2);
+                swapUISlot.UpdateUI(item2);
+            }
+            if(!storage2.staticStorage)
+            {
+                storage2.SetItemSlot(index2, item1);
+                otherSlot.UpdateUI(item1);
+            }
+
+            swapUISlot = null;
+        }
+    }
+
+    public void ClearSwap()
+    {
+        swapUISlot = null;
+    }
+
+    int GetItemIndex(UISlot slot) => slots.IndexOf(slot);
+    public Item GetItem(int index) => items[index];
+    void SetItemSlot(int index, Item item) => items[index] = item;
+
 }
