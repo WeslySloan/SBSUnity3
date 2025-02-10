@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f6616e2cc4d7f4dac0fde834f12fe3, type: 3}
   m_Name: A
   m_EditorClassIdentifier: 
-  itemName: A
+  itemName: Dash
   iconImage: {fileID: 2061115078, guid: 4a4ec70f29513df4ea631f0ddd82977c, type: 3}
   skillData: {fileID: 11400000, guid: 63c2a67e50023374db2e1642ca018c22, type: 2}
